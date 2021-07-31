@@ -1,16 +1,9 @@
 using Plots
+using Plots.PlotMeasures
 using LaTeXStrings
-
-"""
-χ_free の Plot
-"""
 
 χ_free(gj , μB , J , kB , T) = ((gj * μB)^2 * J * (J + 1))/(3 * kB * T)
 gJ(S , L , J) = 3/2 + (S*(S+1) - L*(L+1))/(2*J*(J+1))
-
-"""
-変数の設定
-"""
 
 S = 1/2
 L = 3
@@ -37,24 +30,120 @@ println("kB = $kB")
 N_A = 6 * BigInt(10)^(23)
 println("N_A = $N_A")
 
-T = range(0,300,length = 30001)
-
-χ_free_mol(N_A , gj , μB , J , kB , T) = N_A * χ_free(gj , μB , J , kB , T)
-
-f(T) = 1/χ_free_mol.(N_A , gj , μB , J , kB , T)
-
-plot(T , f , xlabel = L"T(K)" , ylabel = L"1/\chi" , label = L"1/\chi_{free}" , legend =:topleft)
-
-"""
-Γ7 Ground State
-"""
-
-Γ_seven(Δ,T) = (5 + 26*exp(-Δ/(kB*T)) + 32*kB*T*(1-exp(-Δ/(kB*T)))/Δ) / (21 * (1 + 2*exp(-Δ/(kB*T))))
-
-χ_Γ7(gj , μB , J , kB , N_A , T , Δ) = χ_free_mol(N_A , gj , μB , J , kB , T) * Γ_seven(Δ,T)
+T = range(0,300,length = 301)
 
 Δ = 200
+println("Δ = $Δ")
 
-g(T) = 1/χ_Γ7.(gj , μB , J , kB , N_A , T , Δ)
+display(χ_free.(gj , μB , J , kB , T))
 
-plot!(T,g,label = L"1/\chi_{\chi_{\Gamma_7}}",title="Δ = $Δ")
+"""
+モル磁化率
+"""
+χ_free_mol(N_A , gj , μB , J , kB , T) = N_A * χ_free(gj , μB , J , kB , T)
+display(χ_free_mol.(N_A , gj , μB , J , kB , T))
+
+plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "χ_free" , label="1/χ_free" , legend =:outerright , ls=:dash)
+
+
+
+"""
+Γ7 基底状態
+"""
+Co_seven(Δ , kB , T) = (5 + 26 * exp(-Δ/(kB*T)) + 32 * kB * T / Δ * (1 - exp(-Δ/(kB*T)))) / (21 * (1 + 2*exp(-Δ/(kB*T))))
+χ(T) = Co_seven.(Δ , kB , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+scatter(T , Co_seven.(Δ , kB , T))
+scatter!(T , Co_seven.(Δ , 1 , T))
+p = plot()
+#plot!(right_margin = 20mm)
+for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
+    plot!(T , Co_seven.(Δ , n , T) , label = "kB = $n" , legend =:topleft)
+end
+p
+
+χ(T) = Co_seven.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+χ.(T)
+inv.(χ.(T))
+
+
+plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , xlabel = "T(K)" , ylabel = "1/χ" , title = "Γ7 ground state" , label="1/χ_free" , legend =:topleft , ls=:dash , color =:black)
+plot!(T , inv.(χ.(T)) , label="1/χ_Γ7" , color =:red)
+plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , legend=:bottomright , ylabel = "χ(emu/mol)" , color =:blue)
+plot!(T , χ.(T) , label = "χ_Γ7" , color =:green)
+plot!(right_margin = 10mm)
+
+savefig("myplot_Gamma7.pdf")
+
+p = plot()
+plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ7 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
+
+for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
+    χ(T) = Co_seven.(Δ , n , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+    plot!(T , inv.(χ.(T)) , ylims = (0,60) , label = "kB = $n" , legend =:bottomright)
+end
+p
+
+
+"""
+Γ8 基底状態
+"""
+Co_eight(Δ , kB , T) = (26 + 5 * exp(-Δ/(kB*T)) + 32 * kB * T / Δ * (1 - exp(-Δ/(kB*T)))) / (21 * (2 + exp(-Δ/(kB*T))))
+χ(T) = Co_eight.(Δ , kB , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+
+scatter(T , Co_eight.(Δ , kB , T))
+scatter!(T , Co_eight.(Δ , 1 , T))
+
+
+p = plot()
+#plot!(right_margin = 20mm)
+for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
+    plot!(T , Co_eight.(Δ , n , T) , label = "kB = $n" , legend =:topleft)
+end
+p
+
+χ(T) = Co_eight.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+display(χ.(T))
+display(inv.(χ.(T)))
+
+plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , xlabel = "T(K)" , ylabel = "1/χ" , title = "Γ8 ground state" , label="1/χ_free" , legend =:topleft , ls=:dash , color =:black)
+plot!(T , inv.(χ.(T)) , label="1/χ_Γ8" , color =:red)
+plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , legend=:bottomright , ylabel = "χ(emu/mol)" , color =:blue)
+plot!(T , χ.(T) , label = "χ_Γ8" , color =:green)
+plot!(right_margin = 10mm)
+
+savefig("myplot_Gamma8.pdf")
+
+p = plot()
+plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ8 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
+
+for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
+    χ(T) = Co_eight.(Δ , n , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+    plot!(T , inv.(χ.(T)) , ylims = (0,60) , label = "kB = $n" , legend =:bottomright)
+end
+p
+
+
+"""
+1つのグラフに出力
+"""
+
+χ(T) = Co_seven.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+χ.(T)
+inv.(χ.(T))
+
+plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , 
+    xlabel = "T(K)" ,ylabel = "1/χ" , title = "magnetic susceptibility of Ce^3+" , label="1/χ_free" ,legend =:topleft , ls=:dash)
+plot!(T , inv.(χ.(T)) , label="1/χ_Γ7")
+plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , legend=:bottomright , ylabel = "χ(emu/mol)")
+plot!(T , χ.(T) , label = "χ_Γ7")
+plot!(right_margin = 10mm)
+
+χ(T) = Co_eight.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
+χ.(T)
+inv.(χ.(T))
+
+plot!(T , inv.(χ.(T)) , label="1/χ_Γ8")
+plot!(T , χ.(T) , label = "χ_Γ8")
+plot!(right_margin = 10mm)
+
+savefig("myplot_Gamma7-and-Gamma8.pdf")
