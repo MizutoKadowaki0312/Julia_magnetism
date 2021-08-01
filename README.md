@@ -1,6 +1,6 @@
-# julia-file
-.jl repo to save file.
+# julia-magnetism
 
+Calculation of the Magnetic Susceptibility of Rare-Earth Ions Considering the Crystal Field Splitting.
 
 ## VSCode で使用するJuliaのversionをアップデートする
 
