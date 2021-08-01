@@ -2,8 +2,25 @@ using Plots
 using Plots.PlotMeasures
 using LaTeXStrings
 
+"""
+Ce-ion(3+) について，Γ7基底状態とΓ8基底状態それぞれについて
+磁化率をPlotする．
+"""
+
+"""
+1つのイオンの磁化率
+"""
+
 χ_free(gj , μB , J , kB , T) = ((gj * μB)^2 * J * (J + 1))/(3 * kB * T)
+
+"""
+Landeのg因子
+"""
 gJ(S , L , J) = 3/2 + (S*(S+1) - L*(L+1))/(2*J*(J+1))
+
+"""
+変数の設定
+"""
 
 S = 1/2
 L = 3
@@ -35,16 +52,20 @@ T = range(0,300,length = 301)
 Δ = 200
 println("Δ = $Δ")
 
-display(χ_free.(gj , μB , J , kB , T))
+print("χ_free = "); flush(stdout); display(χ_free.(gj , μB , J , kB , T))
 
 """
 モル磁化率
 """
 χ_free_mol(N_A , gj , μB , J , kB , T) = N_A * χ_free(gj , μB , J , kB , T)
-display(χ_free_mol.(N_A , gj , μB , J , kB , T))
 
-plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "χ_free" , label="1/χ_free" , legend =:outerright , ls=:dash)
+print("χ_free_mol = "); flush(stdout); display(χ_free_mol.(N_A , gj , μB , J , kB , T))
 
+
+plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "χ_free_mol" , label="1/χ_free_mol" , legend =:outerright , ls=:dash)
+
+savefig("χ_free_mol.pdf")
+savefig("χ_free_mol.png")
 
 
 """
@@ -62,9 +83,6 @@ end
 p
 
 χ(T) = Co_seven.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
-χ.(T)
-inv.(χ.(T))
-
 
 plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , xlabel = "T(K)" , ylabel = "1/χ" , title = "Γ7 ground state" , label="1/χ_free" , legend =:topleft , ls=:dash , color =:black)
 plot!(T , inv.(χ.(T)) , label="1/χ_Γ7" , color =:red)
@@ -73,6 +91,7 @@ plot!(T , χ.(T) , label = "χ_Γ7" , color =:green)
 plot!(right_margin = 10mm)
 
 savefig("myplot_Gamma7.pdf")
+savefig("myplot_Gamma7.png")
 
 p = plot()
 plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ7 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
@@ -82,6 +101,8 @@ for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
     plot!(T , inv.(χ.(T)) , ylims = (0,60) , label = "kB = $n" , legend =:bottomright)
 end
 p
+savefig("myplot_Gamma7_diff_kB.pdf")
+savefig("myplot_Gamma7_diff_kB.png")
 
 
 """
@@ -95,11 +116,11 @@ scatter!(T , Co_eight.(Δ , 1 , T))
 
 
 p = plot()
-#plot!(right_margin = 20mm)
 for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
     plot!(T , Co_eight.(Δ , n , T) , label = "kB = $n" , legend =:topleft)
 end
 p
+
 
 χ(T) = Co_eight.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
 display(χ.(T))
@@ -112,6 +133,7 @@ plot!(T , χ.(T) , label = "χ_Γ8" , color =:green)
 plot!(right_margin = 10mm)
 
 savefig("myplot_Gamma8.pdf")
+savefig("myplot_Gamma8.png")
 
 p = plot()
 plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ8 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
@@ -121,6 +143,9 @@ for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
     plot!(T , inv.(χ.(T)) , ylims = (0,60) , label = "kB = $n" , legend =:bottomright)
 end
 p
+
+savefig("myplot_Gamma8_diff_kB.pdf")
+savefig("myplot_Gamma8_diff_kB.png")
 
 
 """
@@ -139,11 +164,10 @@ plot!(T , χ.(T) , label = "χ_Γ7")
 plot!(right_margin = 10mm)
 
 χ(T) = Co_eight.(Δ , 1 , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
-χ.(T)
-inv.(χ.(T))
 
 plot!(T , inv.(χ.(T)) , label="1/χ_Γ8")
 plot!(T , χ.(T) , label = "χ_Γ8")
 plot!(right_margin = 10mm)
 
 savefig("myplot_Gamma7-and-Gamma8.pdf")
+savefig("myplot_Gamma7-and-Gamma8.png")
