@@ -64,8 +64,8 @@ print("χ_free_mol = "); flush(stdout); display(χ_free_mol.(N_A , gj , μB , J 
 
 plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "χ_free_mol" , label="1/χ_free_mol" , legend =:outerright , ls=:dash)
 
-savefig("χ_free_mol.pdf")
-savefig("χ_free_mol.png")
+savefig("output-file/χ_free_mol.pdf")
+savefig("output-file/χ_free_mol.png")
 
 
 """
@@ -90,8 +90,8 @@ plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , 
 plot!(T , χ.(T) , label = "χ_Γ7" , color =:green)
 plot!(right_margin = 10mm)
 
-savefig("myplot_Gamma7.pdf")
-savefig("myplot_Gamma7.png")
+savefig("output-file/myplot_Gamma7.pdf")
+savefig("output-file/myplot_Gamma7.png")
 
 p = plot()
 plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ7 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
@@ -101,8 +101,8 @@ for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
     plot!(T , inv.(χ.(T)) , ylims = (0,60) , label = "kB = $n" , legend =:bottomright)
 end
 p
-savefig("myplot_Gamma7_diff_kB.pdf")
-savefig("myplot_Gamma7_diff_kB.png")
+savefig("output-file/myplot_Gamma7_diff_kB.pdf")
+savefig("output-file/myplot_Gamma7_diff_kB.png")
 
 
 """
@@ -132,8 +132,8 @@ plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , 
 plot!(T , χ.(T) , label = "χ_Γ8" , color =:green)
 plot!(right_margin = 10mm)
 
-savefig("myplot_Gamma8.pdf")
-savefig("myplot_Gamma8.png")
+savefig("output-file/myplot_Gamma8.pdf")
+savefig("output-file/myplot_Gamma8.png")
 
 p = plot()
 plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Γ8 ground state" , label="1/χ_free" , legend =:outerright , ls=:dash)
@@ -144,8 +144,8 @@ for n in [kB , 0.1 , 0.3 , 0.5 , 0.7 , 1.0]
 end
 p
 
-savefig("myplot_Gamma8_diff_kB.pdf")
-savefig("myplot_Gamma8_diff_kB.png")
+savefig("output-file/myplot_Gamma8_diff_kB.pdf")
+savefig("output-file/myplot_Gamma8_diff_kB.png")
 
 
 """
@@ -169,5 +169,5 @@ plot!(T , inv.(χ.(T)) , label="1/χ_Γ8")
 plot!(T , χ.(T) , label = "χ_Γ8")
 plot!(right_margin = 10mm)
 
-savefig("myplot_Gamma7-and-Gamma8.pdf")
-savefig("myplot_Gamma7-and-Gamma8.png")
+savefig("output-file/myplot_Gamma7-and-Gamma8.pdf")
+savefig("output-file/myplot_Gamma7-and-Gamma8.png")
