@@ -4,7 +4,7 @@ Calculation of the Magnetic Susceptibility of Rare-Earth Ions Considering the Cr
 
 
 
-#### 計算ファイル
+#### 計算用紙
 
 ##### Ce3+
 /docs/Ce3+_磁化率導出.pdf
