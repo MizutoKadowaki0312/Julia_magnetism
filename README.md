@@ -1,8 +1,15 @@
-# julia-magnetism
+## julia-magnetism
 
 Calculation of the Magnetic Susceptibility of Rare-Earth Ions Considering the Crystal Field Splitting.
 
-## VSCode で使用するJuliaのversionをアップデートする
+
+
+#### 計算ファイル
+
+##### Ce3+
+/docs/Ce3+_磁化率導出.pdf
+
+#### VSCode で使用するJuliaのversionをアップデートする
 
 1. VSCode > settings を開く．
 2. Julia > Executable Path から以下を更新．
@@ -14,7 +21,7 @@ Calculation of the Magnetic Susceptibility of Rare-Earth Ions Considering the Cr
 
 
 
-## Julia を Jupyter notebook で使用する
+#### Julia を Jupyter notebook で使用する
 
 JuliaをアップデートしたらJupyter Notebookで使用するためのコマンド操作．
 
@@ -31,7 +38,7 @@ pkg > build IJulia
 ```
 をする．
 
-## Julia を Jupyter notebook で使用する
+#### Julia を Jupyter notebook で使用する
 
 JuliaをアップデートしたらJupyter Notebookで使用するためのコマンド操作．
 
