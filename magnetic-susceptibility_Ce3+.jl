@@ -47,7 +47,7 @@ println("kB = $kB")
 N_A = 6 * BigInt(10)^(23)
 println("N_A = $N_A")
 
-T = range(0,300,length = 301)
+T = range(0,1000,length = 1001)
 
 Δ = 200
 println("Δ = $Δ")
