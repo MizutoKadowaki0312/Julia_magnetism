@@ -105,3 +105,6 @@ C(R , Z , E , kB , T) = R*(E/(kB*T))^2/(Z(kB , E , T))^2 * (3*Z(kB , E , T)*exp(
 
 display(C.(R , Z , E , kB , T))
 plot(T , C.(R , Z , E , kB , T) , xlabel = "T(K)" , ylabel = "C(T)")
+
+savefig("output-file/myplot_heat-capacity_Pr3+.pdf")
+savefig("output-file/myplot_heat-capacity_Pr3+.png")
