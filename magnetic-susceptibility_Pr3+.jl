@@ -57,19 +57,22 @@ println("E = $E")
 display(χ_free_mol.(N_A , gj , μB , J , kB , T))
 
 
-plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "χ_free_mol" , label="1/χ_free_mol" , legend =:outerright , ls=:dash)
+p1 = plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , title = "Inverse of χ_free" , xlabel = "T(K)" , ylabel = "1/χ_free" , ls=:dash , label=:none)
 
-#savefig("output-file/χ_free_mol_Pr3+.pdf")
-#savefig("output-file/χ_free_mol_Pr3+.png")
+savefig("output-file/χ_free_mol_Pr3+.pdf")
+savefig("output-file/χ_free_mol_Pr3+.png")
 
 """
 分配関数
 """
 Z(kB , E , T) = 1 + 3*exp(-E/(kB*T))
-"""
+
 display(Z.(kB , E , T))
-plot(T , Z.(kB , E , T))
-"""
+p2 = plot(T , Z.(kB , E , T) , xlabel = "T(K)" , ylabel = "Z(T)" , label =:none , title = "distribution func.")
+
+savefig("output-file/distribution-function_Pr3+.pdf")
+savefig("output-file/distribution-function_Pr3+.png")
+
 
 """
 磁化率
@@ -80,7 +83,8 @@ Co_one(kB , E , T) = (3/40 * exp(-E/(kB*T)) + (2*kB*T/E)*(1 - exp(-E/(kB*T))))/Z
 
 χ(T) = Co_one.(kB , E , T) * χ_free_mol.(N_A , gj , μB , J , kB , T)
 
-plot(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , xlabel = "T(K)" , ylabel = "1/χ" , title = "Γ1 ground state" , label="1/χ_free" , legend =:topleft , ls=:dash , color =:black)
+p3 = plot()
+plot!(T , inv.(χ_free_mol.(N_A , gj , μB , J , kB , T)) , xlabel = "T(K)" , ylabel = "1/χ" , title = "Γ1 ground state" , label="1/χ_free" , legend =:topleft , ls=:dash , color =:black)
 
 plot!(T , inv.(χ.(T)) , label="1/χ_Γ1" , color =:red)
 
@@ -89,12 +93,13 @@ plot!(twinx() , χ_free_mol.(N_A , gj , μB , J , kB , T) , label = "χ_free" , 
 plot!(T , χ.(T) , label = "χ_Γ1" , color =:green)
 plot!(right_margin = 10mm)
 
-#savefig("output-file/myplot_Gamma1-GS_Pr3+.pdf")
-#savefig("output-file/myplot_Gamma1-GS_Pr3+.png")
+savefig("output-file/myplot_Gamma1-GS_Pr3+.pdf")
+savefig("output-file/myplot_Gamma1-GS_Pr3+.png")
 
-plot(T , χ.(T) , label = "χ_Γ1" , color =:green)
-#savefig("output-file/myplot_Gamma1-only_Pr3+.pdf")
-#savefig("output-file/myplot_Gamma1-only_Pr3+.png")
+p4 = plot(T , χ.(T) , xlabel = "T(K)" , ylabel = "χ(T)" , label =:none , title = "magnetic sus." , color =:green)
+
+savefig("output-file/myplot_Gamma1-only_Pr3+.pdf")
+savefig("output-file/myplot_Gamma1-only_Pr3+.png")
 
 
 """
@@ -104,7 +109,17 @@ R = 8.3
 C(R , Z , E , kB , T) = R*(E/(kB*T))^2/(Z(kB , E , T))^2 * (3*Z(kB , E , T)*exp(-E/(kB*T)) - 9* exp(-2*(E/(kB*T))))
 
 display(C.(R , Z , E , kB , T))
-plot(T , C.(R , Z , E , kB , T) , xlabel = "T(K)" , ylabel = "C(T)")
+p5 = plot(T , C.(R , Z , E , kB , T) , xlabel = "T(K)" , ylabel = "C(T)" , label = :none , title = "heat capacity")
 
 savefig("output-file/myplot_heat-capacity_Pr3+.pdf")
 savefig("output-file/myplot_heat-capacity_Pr3+.png")
+
+
+"""
+グラフをまとめて出力
+"""
+
+plot(p1,p2,p3,p4,p5)
+
+
+
